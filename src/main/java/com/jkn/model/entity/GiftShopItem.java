@@ -1,12 +1,12 @@
-package com.jkn;
+package com.jkn.model.entity;
 
 import java.sql.Blob;
 
 public record GiftShopItem(
-        long id,
+        Long id,
         String name,
         int price,
         String description,
         Blob picture
-) {}
+) implements AbstractEntity {}
 

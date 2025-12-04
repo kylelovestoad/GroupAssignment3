@@ -1,0 +1,29 @@
+package com.jkn.controller;
+
+import com.jkn.model.dao.GiftShopItemDAO;
+import com.jkn.model.entity.GiftShopItem;
+
+import java.sql.Blob;
+import java.util.List;
+
+public class GiftShopItemService {
+    public GiftShopItem createGiftShopItem(String name, int price, String description, Blob picture) throws Exception {
+
+        GiftShopItem item = new GiftShopItem(null, name, price, description, picture);
+
+        GiftShopItemDAO dao = new GiftShopItemDAO();
+        dao.create(item);
+
+        return item;
+    }
+
+    public List<GiftShopItem> getAllItems() throws Exception {
+        GiftShopItemDAO dao = new GiftShopItemDAO();
+        return dao.list();
+    }
+
+    public void deleteGiftShopItem(int id) throws Exception {
+        GiftShopItemDAO dao = new GiftShopItemDAO();
+        dao.delete(id);
+    }
+}
