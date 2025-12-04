@@ -8,7 +8,7 @@ public class Main {
     static void main() {
         // TODO set this connection
         try(Connection connection = DriverManager.getConnection("")) {
-            SectionService sectionService = new SectionService(connection);
+            GiftShopItemDAO sectionService = new GiftShopItemDAO(connection);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
