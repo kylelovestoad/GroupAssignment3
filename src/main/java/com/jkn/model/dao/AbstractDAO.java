@@ -14,7 +14,6 @@ public abstract class AbstractDAO<E extends AbstractEntity> {
     private String Password = "dk"; //Also read this from a file
 
     public Connection getConnection() throws SQLException {
-        System.out.println("Hello World");
         return DriverManager.getConnection(ConUrl+":"+Port+"/"+Database+ "?user="+Username+"&password="+Password);
     }
 

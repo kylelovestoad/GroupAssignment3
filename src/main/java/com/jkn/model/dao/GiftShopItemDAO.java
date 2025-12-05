@@ -36,7 +36,7 @@ public class GiftShopItemDAO extends AbstractDAO<GiftShopItem> {
     public GiftShopItem read(long id) throws SQLException {
         Connection con = getConnection();
 
-        PreparedStatement pst = getConnection().prepareStatement("SELECT * FROM GiftShopItem WHERE id = ?");
+        PreparedStatement pst = getConnection().prepareStatement("SELECT * FROM GiftShopItem WHERE gift_shop_item_id = ?");
         pst.setLong(1, id);
 
         ResultSet Rs = pst.executeQuery();
@@ -60,11 +60,12 @@ public class GiftShopItemDAO extends AbstractDAO<GiftShopItem> {
     public void update(GiftShopItem giftShopItem) throws SQLException {
         Connection con = getConnection();
 
-        PreparedStatement statement = con.prepareStatement("UPDATE GiftShopItem SET name = ?, price = ?, description = ?, picture = ? WHERE id = ?");
+        PreparedStatement statement = con.prepareStatement("UPDATE GiftShopItem SET name = ?, price = ?, description = ?, image = ? WHERE gift_shop_item_id = ?");
         statement.setString(1, giftShopItem.getName());
         statement.setInt(2, giftShopItem.getPrice());
         statement.setString(3, giftShopItem.getDescription());
         statement.setBlob(4, giftShopItem.getPicture());
+        statement.setLong(5, giftShopItem.getID());
         statement.execute();
 
         con.close();

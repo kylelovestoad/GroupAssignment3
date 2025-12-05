@@ -4,6 +4,8 @@ import com.jkn.controller.GiftShopItemService;
 import com.jkn.model.entity.GiftShopItem;
 
 import javax.sql.rowset.serial.SerialBlob;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Scanner;
 
 public class CLI {
@@ -18,6 +20,7 @@ public class CLI {
 
     GiftShopItemService service = new GiftShopItemService();
     Scanner scanner = new Scanner(System.in);
+    List<GiftShopItem> items;
 
     private String getStringInput(String prompt) {
         System.out.println(prompt);
@@ -26,7 +29,7 @@ public class CLI {
 
     private float getFloatInput(String prompt) {
 
-        System.out.print(prompt);
+        System.out.println(prompt);
 
         while (true) {
             if (scanner.hasNextFloat()) {
@@ -35,13 +38,14 @@ public class CLI {
                 return f;
             } else {
                 System.out.println("Invalid input");
+                scanner.nextLine();
             }
         }
     }
 
     private int getIntInput(String prompt) {
 
-        System.out.print(prompt);
+        System.out.println(prompt);
 
         while (true) {
             if (scanner.hasNextInt()) {
@@ -50,7 +54,22 @@ public class CLI {
                 return i;
             } else {
                 System.out.println("Invalid input");
+                scanner.nextLine();
             }
+        }
+    }
+
+    private GiftShopItem getItemInput() {
+        while(true) {
+            int item_id = getIntInput("Enter Item Number: ");
+
+            for (GiftShopItem item: items) {
+                if (item.getID() == item_id) {
+                    return item;
+                }
+            }
+
+            System.out.println("Invalid item");
         }
     }
 
@@ -75,37 +94,59 @@ public class CLI {
         }
     }
 
-//    private void handleUpdate() {
-//        try {
-//            String field = getStringInput("Enter field to update:\n1. Name\n2. Price\n3. Description");
-//
-//            switch (field) {
-//                case NAME -> handleCreate();
-//                case PRICE -> handleDelete();
-//                case DESCRIPTION ->
-//                default -> System.out.println("Invalid input");
-//            }
-//
-//        } catch (Exception e) {
-//            System.out.println("Failed to update gift shop item");
-//        }
-//    }
+    private void handleUpdateName(GiftShopItem item) throws Exception {
+        String name = getStringInput("New Name: ");
+
+        service.updateGiftShopItemName(item, name);
+    }
+
+    private void handleUpdatePrice(GiftShopItem item) throws Exception {
+        int price = (int) (getFloatInput("New Price: ") * 100);
+
+        service.updateGiftShopItemPrice(item, price);
+    }
+
+    private void handleUpdateDescription(GiftShopItem item) throws Exception {
+        String description = getStringInput("New Description: ");
+
+        service.updateGiftShopItemDescription(item, description);
+    }
+
+    private void handleUpdate() {
+        try {
+            GiftShopItem item  = getItemInput();
+
+            String field = getStringInput("Enter field to update:\n1. Name\n2. Price\n3. Description");
+
+            switch (field) {
+                case NAME -> handleUpdateName(item);
+                case PRICE -> handleUpdatePrice(item);
+                case DESCRIPTION -> handleUpdateDescription(item);
+                default -> System.out.println("Invalid input");
+            }
+
+        } catch (Exception e) {
+            System.out.println("Failed to update gift shop item");
+        }
+    }
 
     public void run() throws Exception {
 
         while (true) {
-            System.out.println("Items:");
+            items = service.getAllItems();
+            items.sort(Comparator.comparingLong(GiftShopItem::getID));
 
-            for (GiftShopItem item : service.getAllItems()) {
+            for (GiftShopItem item : items) {
                 System.out.println(item);
             }
 
-            System.out.println("\nSelect Option:\n1. Create Item\n2. Delete Item\n0. Quit");
+            System.out.println("\nSelect Option:\n1. Create Item\n2. Delete Item\n3. Update Item\n0. Quit");
             String input = scanner.nextLine().strip();
 
             switch (input) {
                 case CREATE -> handleCreate();
                 case DELETE -> handleDelete();
+                case UPDATE -> handleUpdate();
                 case QUIT -> {
                     return;
                 }

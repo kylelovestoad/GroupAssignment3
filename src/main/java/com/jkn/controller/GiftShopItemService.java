@@ -17,7 +17,29 @@ public class GiftShopItemService {
         return item;
     }
 
-    public GiftShopItem updateGiftShopItem(GiftShopItem item) throws Exception {
+    public GiftShopItem updateGiftShopItemName(GiftShopItem item, String name) throws Exception {
+
+        item.setName(name);
+
+        GiftShopItemDAO dao = new GiftShopItemDAO();
+        dao.update(item);
+
+        return item;
+    }
+
+    public GiftShopItem updateGiftShopItemPrice(GiftShopItem item, int price) throws Exception {
+
+        item.setPrice(price);
+
+        GiftShopItemDAO dao = new GiftShopItemDAO();
+        dao.update(item);
+
+        return item;
+    }
+
+    public GiftShopItem updateGiftShopItemDescription(GiftShopItem item, String description) throws Exception {
+
+        item.setDescription(description);
 
         GiftShopItemDAO dao = new GiftShopItemDAO();
         dao.update(item);
