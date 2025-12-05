@@ -16,7 +16,10 @@ public class GiftShopItemDAO extends AbstractDAO<GiftShopItem> {
     public void create(GiftShopItem giftShopItem) throws SQLException {
         Connection con = getConnection();
 
-        PreparedStatement statement = con.prepareStatement("INSERT INTO GiftShopItem (name, price, description, image) VALUES (?, ?, ?, ?)");
+        PreparedStatement statement = con.prepareStatement(
+                "INSERT INTO GiftShopItem (name, price, description, image) VALUES (?, ?, ?, ?)",
+                PreparedStatement.RETURN_GENERATED_KEYS
+        );
         statement.setString(1, giftShopItem.getName());
         statement.setInt(2, giftShopItem.getPrice());
         statement.setString(3, giftShopItem.getDescription());
@@ -36,7 +39,10 @@ public class GiftShopItemDAO extends AbstractDAO<GiftShopItem> {
     public GiftShopItem read(long id) throws SQLException {
         Connection con = getConnection();
 
-        PreparedStatement pst = getConnection().prepareStatement("SELECT * FROM GiftShopItem WHERE gift_shop_item_id = ?");
+        PreparedStatement pst = getConnection().prepareStatement(
+                "SELECT * FROM GiftShopItem WHERE gift_shop_item_id = ?",
+                PreparedStatement.RETURN_GENERATED_KEYS
+        );
         pst.setLong(1, id);
 
         ResultSet Rs = pst.executeQuery();
@@ -60,7 +66,10 @@ public class GiftShopItemDAO extends AbstractDAO<GiftShopItem> {
     public void update(GiftShopItem giftShopItem) throws SQLException {
         Connection con = getConnection();
 
-        PreparedStatement statement = con.prepareStatement("UPDATE GiftShopItem SET name = ?, price = ?, description = ?, image = ? WHERE gift_shop_item_id = ?");
+        PreparedStatement statement = con.prepareStatement(
+                "UPDATE GiftShopItem SET name = ?, price = ?, description = ?, image = ? WHERE gift_shop_item_id = ?",
+                PreparedStatement.RETURN_GENERATED_KEYS
+        );
         statement.setString(1, giftShopItem.getName());
         statement.setInt(2, giftShopItem.getPrice());
         statement.setString(3, giftShopItem.getDescription());
@@ -77,7 +86,10 @@ public class GiftShopItemDAO extends AbstractDAO<GiftShopItem> {
 
         Connection con = getConnection();
 
-        PreparedStatement statement = con.prepareStatement("DELETE FROM GiftShopItem WHERE gift_shop_item_id = ?");
+        PreparedStatement statement = con.prepareStatement(
+                "DELETE FROM GiftShopItem WHERE gift_shop_item_id = ?",
+                PreparedStatement.RETURN_GENERATED_KEYS
+        );
         statement.setLong(1, id);
         statement.execute();
 
@@ -90,7 +102,10 @@ public class GiftShopItemDAO extends AbstractDAO<GiftShopItem> {
 
         ArrayList<GiftShopItem> lstGiftShopItem = new ArrayList<>();
 
-        PreparedStatement pst = con.prepareStatement("SELECT * FROM GiftShopItem ORDER BY name");
+        PreparedStatement pst = con.prepareStatement(
+                "SELECT * FROM GiftShopItem ORDER BY name",
+                PreparedStatement.RETURN_GENERATED_KEYS
+        );
         ResultSet rs = pst.executeQuery();
 
         while (rs.next()) {
