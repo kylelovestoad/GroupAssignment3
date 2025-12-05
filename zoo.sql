@@ -7,7 +7,7 @@ create table if not exists GiftShopItem (
     name varchar(50) not null,
     price int not null,
     description varchar(200) not null,
-    image blob,
+    image mediumblob,
 
     constraint gift_shop_item_pk primary key (gift_shop_item_id)
 );
@@ -21,7 +21,7 @@ create table if not exists GiftShopItem (
     name varchar(50) not null,
     price int not null,
     description varchar(200) not null,
-    image blob,
+    image mediumblob,
 
     constraint gift_shop_item_pk primary key (gift_shop_item_id)
 );

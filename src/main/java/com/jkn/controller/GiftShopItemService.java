@@ -3,6 +3,7 @@ package com.jkn.controller;
 import com.jkn.model.dao.GiftShopItemDAO;
 import com.jkn.model.entity.GiftShopItem;
 
+import javax.sql.rowset.serial.SerialBlob;
 import java.sql.Blob;
 import java.util.List;
 
@@ -47,6 +48,16 @@ public class GiftShopItemService {
     public GiftShopItem updateGiftShopItemDescription(GiftShopItem item, String description) throws Exception {
 
         item.setDescription(description);
+
+        GiftShopItemDAO dao = new GiftShopItemDAO();
+        dao.update(item);
+
+        return item;
+    }
+
+    public GiftShopItem updateGiftShopItemPicture(GiftShopItem item, byte[] bytes) throws Exception {
+
+        item.setPicture(new SerialBlob(bytes));
 
         GiftShopItemDAO dao = new GiftShopItemDAO();
         dao.update(item);

@@ -4,6 +4,8 @@ import com.jkn.controller.GiftShopItemService;
 import com.jkn.model.entity.GiftShopItem;
 
 import javax.sql.rowset.serial.SerialBlob;
+import java.io.File;
+import java.nio.file.Files;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
@@ -11,14 +13,15 @@ import java.util.Scanner;
 public class CLI {
     private static final String CREATE = "1";
     private static final String READ = "2";
-    private static final String DELETE = "3";
-    private static final String UPDATE = "4";
+    private static final String UPDATE = "3";
+    private static final String DELETE = "4";
     private static final String LIST = "5";
     private static final String QUIT = "0";
 
     private static final String NAME = "1";
     private static final String PRICE = "2";
     private static final String DESCRIPTION = "3";
+    private static final String PICTURE = "4";
 
     GiftShopItemService service = new GiftShopItemService();
     Scanner scanner = new Scanner(System.in);
@@ -58,6 +61,18 @@ public class CLI {
                 scanner.nextLine();
             }
         }
+    }
+
+    private File getFileInput(String prompt) {
+        System.out.println(prompt);
+
+        File file = new File(scanner.nextLine());
+        while (!(file.exists() && file.isFile())) {
+            System.out.println("File not found");
+            file = new File(scanner.nextLine());
+        }
+
+        return file;
     }
 
     private GiftShopItem getItemInput() throws Exception {
@@ -137,6 +152,12 @@ public class CLI {
         service.updateGiftShopItemDescription(item, description);
     }
 
+    private void handleUpdatePicture(GiftShopItem item) throws Exception {
+        File file = getFileInput("New Image file: ");
+
+        service.updateGiftShopItemPicture(item, Files.readAllBytes(file.toPath()));
+    }
+
     private void displayItems(List<GiftShopItem> items) throws Exception {
 
         items.sort(Comparator.comparingLong(GiftShopItem::getID));
@@ -150,12 +171,13 @@ public class CLI {
         try {
             GiftShopItem item  = getItemInput();
 
-            String field = getStringInput("Enter field to update:\n1. Name\n2. Price\n3. Description");
+            String field = getStringInput("Enter field to update:\n1. Name\n2. Price\n3. Description\n4. Picture");
 
             switch (field) {
                 case NAME -> handleUpdateName(item);
                 case PRICE -> handleUpdatePrice(item);
                 case DESCRIPTION -> handleUpdateDescription(item);
+                case PICTURE -> handleUpdatePicture(item);
                 default -> System.out.println("Invalid input");
             }
 
