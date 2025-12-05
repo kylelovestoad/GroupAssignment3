@@ -9,10 +9,18 @@ import java.util.List;
 public class GiftShopItemService {
     public GiftShopItem createGiftShopItem(String name, int price, String description, Blob picture) throws Exception {
 
-        GiftShopItem item = new GiftShopItem(null, name, price, description, picture);
+        GiftShopItem item = new GiftShopItem(name, price, description, picture);
 
         GiftShopItemDAO dao = new GiftShopItemDAO();
         dao.create(item);
+
+        return item;
+    }
+
+    public GiftShopItem updateGiftShopItem(GiftShopItem item) throws Exception {
+
+        GiftShopItemDAO dao = new GiftShopItemDAO();
+        dao.update(item);
 
         return item;
     }
