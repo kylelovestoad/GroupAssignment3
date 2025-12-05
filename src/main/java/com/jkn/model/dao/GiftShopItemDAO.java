@@ -23,10 +23,10 @@ public class GiftShopItemDAO extends AbstractDAO<GiftShopItem> {
         statement.setBlob(4, giftShopItem.getPicture());
         statement.executeUpdate();
 
-//        ResultSet rs = statement.getGeneratedKeys();
-//        if (rs.next()) {
-//            giftShopItem.setID(rs.getLong(1));
-//        }
+        ResultSet rs = statement.getGeneratedKeys();
+        if (rs.next()) {
+            giftShopItem.setID(rs.getLong(1));
+        }
 
         con.close();
 

@@ -10,8 +10,10 @@ import java.util.Scanner;
 
 public class CLI {
     private static final String CREATE = "1";
-    private static final String DELETE = "2";
-    private static final String UPDATE = "3";
+    private static final String READ = "2";
+    private static final String DELETE = "3";
+    private static final String UPDATE = "4";
+    private static final String LIST = "5";
     private static final String QUIT = "0";
 
     private static final String NAME = "1";
@@ -20,7 +22,6 @@ public class CLI {
 
     GiftShopItemService service = new GiftShopItemService();
     Scanner scanner = new Scanner(System.in);
-    List<GiftShopItem> items;
 
     private String getStringInput(String prompt) {
         System.out.println(prompt);
@@ -59,12 +60,15 @@ public class CLI {
         }
     }
 
-    private GiftShopItem getItemInput() {
+    private GiftShopItem getItemInput() throws Exception {
+        List<GiftShopItem> items = service.getAllItems();
+        displayItems(items);
+
         while(true) {
-            int item_id = getIntInput("Enter Item Number: ");
+            int itemId = getIntInput("Enter Item Number: ");
 
             for (GiftShopItem item: items) {
-                if (item.getID() == item_id) {
+                if (item.getID() == itemId) {
                     return item;
                 }
             }
@@ -86,9 +90,30 @@ public class CLI {
         }
     }
 
+    private void handleRead() {
+        try {
+            int itemId = getIntInput("Enter Item Id: ");
+
+            GiftShopItem item = service.readGiftShopItem(itemId);
+
+            if (item == null) {
+                System.out.println("No item with id " + itemId);
+            } else {
+                System.out.println(item);
+            }
+        } catch (Exception e) {
+            System.out.println("Failed to create gift shop item");
+        }
+    }
+
     private void handleDelete() {
         try {
-            service.deleteGiftShopItem(getIntInput("Enter number of item to delete"));
+            List<GiftShopItem> items = service.getAllItems();
+            displayItems(items);
+
+            int itemId = getIntInput("Enter number of item to delete");
+
+            service.deleteGiftShopItem(itemId);
         } catch (Exception e) {
             System.out.println("Failed to delete gift shop item");
         }
@@ -112,6 +137,15 @@ public class CLI {
         service.updateGiftShopItemDescription(item, description);
     }
 
+    private void displayItems(List<GiftShopItem> items) throws Exception {
+
+        items.sort(Comparator.comparingLong(GiftShopItem::getID));
+
+        for (GiftShopItem item : items) {
+            System.out.println(item);
+        }
+    }
+
     private void handleUpdate() {
         try {
             GiftShopItem item  = getItemInput();
@@ -130,23 +164,27 @@ public class CLI {
         }
     }
 
+    private void handleList() {
+        try {
+            displayItems(service.getAllItems());
+        } catch (Exception e) {
+            System.out.println("Failed to display gift shop items");
+        }
+    }
+
     public void run() throws Exception {
 
         while (true) {
-            items = service.getAllItems();
-            items.sort(Comparator.comparingLong(GiftShopItem::getID));
 
-            for (GiftShopItem item : items) {
-                System.out.println(item);
-            }
-
-            System.out.println("\nSelect Option:\n1. Create Item\n2. Delete Item\n3. Update Item\n0. Quit");
+            System.out.println("\nSelect Option:\n1. Create Item\n2. Display Item\n3. Update Item\n4. Delete Item\n5. List All Items\n0. Quit");
             String input = scanner.nextLine().strip();
 
             switch (input) {
                 case CREATE -> handleCreate();
+                case READ -> handleRead();
                 case DELETE -> handleDelete();
                 case UPDATE -> handleUpdate();
+                case LIST -> handleList();
                 case QUIT -> {
                     return;
                 }

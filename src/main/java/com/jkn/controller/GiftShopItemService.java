@@ -17,6 +17,13 @@ public class GiftShopItemService {
         return item;
     }
 
+    public GiftShopItem readGiftShopItem(int id) throws Exception {
+
+        GiftShopItemDAO dao = new GiftShopItemDAO();
+
+        return dao.read(id);
+    }
+
     public GiftShopItem updateGiftShopItemName(GiftShopItem item, String name) throws Exception {
 
         item.setName(name);
